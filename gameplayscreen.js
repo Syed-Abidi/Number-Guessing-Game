@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
-import PlusMinus from './components/controls';
+import PlusMinus from './controls';
 
 // Function to generate a random number between min and max
 const numberGenerator = (min, max) => {
