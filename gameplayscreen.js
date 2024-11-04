@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import PlusMinus from './components/controls';
 
+// Function to generate a random number between min and max
 const numberGenerator = (min, max) => {
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
@@ -9,27 +10,22 @@ const numberGenerator = (min, max) => {
 };
 
 function GameScreen({ usernumber, onGameOver }) {
-  // Declare minBoundary and maxBoundary using 'let'
-  let minBoundary = 1;
-  let maxBoundary = 100;
+  // Using useRef to persist boundary values between renders
+  const minBoundary = useRef(1);
+  const maxBoundary = useRef(100);
 
   const initialGuess = numberGenerator(1, 100);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [guessRounds, setGuessRounds] = useState([initialGuess]);
 
+  // Check if the current guess is correct
   useEffect(() => {
     if (currentGuess === usernumber) {
       onGameOver(guessRounds.length);
     }
   }, [currentGuess, usernumber, onGameOver]);
 
-  useEffect(() => {
-    minBoundary = 1;
-    maxBoundary = 100;
-  }, []);
-
   function nextGuessHandler(direction) {
-    // direction => 'lower', 'greater'
     if (
       (direction === 'lower' && currentGuess < usernumber) ||
       (direction === 'greater' && currentGuess > usernumber)
@@ -40,18 +36,20 @@ function GameScreen({ usernumber, onGameOver }) {
       return;
     }
 
+    // Adjust the boundaries based on the user's input
     if (direction === 'lower') {
-      maxBoundary = currentGuess-1;
+      maxBoundary.current = currentGuess - 1;
     } else {
-      minBoundary = currentGuess + 1;
+      minBoundary.current = currentGuess + 1;
     }
 
-    // Use numberGenerator instead of generateRandomBetween
-    const newRndNumber = numberGenerator(minBoundary, maxBoundary);
+    // Generate a new random number within the updated boundaries
+    const newRndNumber = numberGenerator(minBoundary.current, maxBoundary.current);
     setCurrentGuess(newRndNumber);
     setGuessRounds((prevGuessRounds) => [newRndNumber, ...prevGuessRounds]);
   }
 
+  
   return (
     <View style={styles.container}>
       <View style={styles.titleandnum}>
