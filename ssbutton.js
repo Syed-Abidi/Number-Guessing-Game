@@ -28,6 +28,9 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgreen",
     borderRadius: 8, // Optional: Adds rounded corners
     margin: 5,
+    borderWidth:4,
+    borderRadius:20,
+    borderColor:'yellow',
   },
   buttonText: {
     fontSize: 16,
